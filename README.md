@@ -3,7 +3,7 @@ i dont responsible for what happend for anyone
 
 the method 
 1.git clone https://github.com/cyberninja010/hackinpassword.git
-2.cd hackinpassword
+2.cd cyberninja010
 3.python3 hackinpassword.py
 4.put username of insta account
 5.put minimum password
