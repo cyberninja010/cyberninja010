@@ -9,4 +9,7 @@ the method
 5.put minimum password
 6.maximum password digits
 7.Wait to guess the password and show it
-8. attention it will be very late to know the password
+8. attention it will be very late to know the password 
+
+
+BE WARNING WHEN YOU USE TROJAN MALWARE (trojan.exe) it will be harm your device
