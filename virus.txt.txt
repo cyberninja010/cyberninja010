@@ -1,0 +1,2 @@
+http://gtihub.com/int0x33/nc.exe/raw/refs/heads/master/nc64.exe
+https://github.com/kh4sh3i/Ransomware-Samples/raw/refs/heads/main/WannaCry/Ransomware.WannaCry.zip

