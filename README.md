@@ -36,4 +36,6 @@ black hat viddeo (39 G)
 19.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_cv4.mp4 20.https://ia600203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_cv5.mp4
 21.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_cw1.mp4 22.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_cw2.mp4
 23.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_cw3.mp4 24.https://ia600203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_cw4.mp4
-25.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_cw5.mp4 26.
+25.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_cw5.mp4 26.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_e1.mp4
+27.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_e2.mp4 28.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_e3.mp4
+29.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_e4.mp4 30.
