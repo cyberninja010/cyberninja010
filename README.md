@@ -21,6 +21,11 @@ https://github.com/MapleHackersoff/Hoic/raw/refs/heads/master/Hoic.rar
 
 phishing >>>
  https://media.igram.world/get?__sig=YsxvqAN0O-6SEHuoSPhWOA&__expires=1750511152&uri=https://scontent.cdninstagram.com/o1/v/t16/f2/m86/AQNNYtWY3A71Hs0mET7v3K7JI7laGE_60ORk1r50SqKfQNTCftPAY8026XiCjFd9wsbYoCFUci2HH-jYZOLckIwobY_GbMxmhPqxhNU.mp4?stp=dst-mp4&efg=eyJxZV9ncm91cHMiOiJbXCJpZ193ZWJfZGVsaXZlcnlfdnRzX290ZlwiXSIsInZlbmNvZGVfdGFnIjoidnRzX3ZvZF91cmxnZW4uY2xpcHMuYzIuNzIwLmJhc2VsaW5lIn0&_nc_cat=100&vs=1830205024379810_3021517366&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC8wQTQzM0FFQkQ2NUFBQzlGNzIxNjZFOEY0NUQ2RjhCNF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYOnBhc3N0aHJvdWdoX2V2ZXJzdG9yZS9HQ0Rrb1IzSFVvNEZkVGNDQUVjTlBrdWE3MlJ2YnFfRUFBQUYVAgLIARIAKAAYABsAFQAAJu7v7pbnr4NAFQIoAkMzLBdAJszMzMzMzRgSZGFzaF9iYXNlbGluZV8xX3YxEQB1/gdl5p0BAA==&_nc_rid=e2073e9634&ccb=9-4&oh=00_AfOv6wswVMoDKRuSvvwx55O-B0Q1AOzPEfEQbsrNxcNyRg&oe=68588A69&_nc_sid=d885a2&dl=1&filename=....mp4&ua=-&referer=https://www.instagram.com/
-
+(((
 black hat viddeo (39 G)
- https://archive.org/compress/blackhat2010usavideo/formats=H.264&file=/blackhat2010usavideo.zip
+ https://archive.org/compress/blackhat2010usavideo/formats=H.264&file=/blackhat2010usavideo.zip   
+ list of video 
+ 1.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_bc1.mp4 2.https://ia600203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_bc2.mp4 3.https://ia600203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_bc3.mp4 4.https://ia600203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_bc4.mp4
+5. https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_bc5.mp4 6.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_bp1.mp4
+7.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_bp2.mp4 8.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_bp3.mp4
+9.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_bp4.mp4 
