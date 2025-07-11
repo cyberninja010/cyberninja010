@@ -46,4 +46,10 @@ black hat viddeo (39 G)
 33https://ia600203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_ex4.mp4 34.https://ia600203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_ex5.mp4
 35.https://ia600203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_i1.ogv 36.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_i2.ogv
 37.https://ia600203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_i3.ogv 38.https://ia600203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_i4.ogv 
-39.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_i5.ogv 40.
+39.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_i5.ogv 40.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_k1_k2.ogv
+41.https://ia600203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_k3.ogv 42.https://ia600203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_me1.ogv
+43.https://ia600203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_me2.ogv 44.https://ia600203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_me3.ogv
+45.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_me4.ogv 46.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_mf1.ogv
+47.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_mf2.ogv 48.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_mf3.ogv
+49.https://ia800203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_mf4.ogv 50.https://ia600203.us.archive.org/20/items/blackhat2010usavideo/10_bhb_mf5.ogv
+51.
