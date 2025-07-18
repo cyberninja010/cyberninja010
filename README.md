@@ -18,6 +18,7 @@ BE WARNING WHEN YOU USE TROJAN MALWARE (trojan.exe) it will be harm your device
 
 malicious>>>
 https://github.com/MapleHackersoff/Hoic/raw/refs/heads/master/Hoic.rar
+https://readbeam.site/b0dr65gg5v/daniel-w-dieterle/tactical-wireless-security?source=issuu-
 
 https://momot.rs/d3/y/1751114503/10000/g4/libgenrs_nonfiction/libgenrs_nonfiction/54000/1b4d7b43a50b292e1b8c3df8497902c8~/zfHZpwaRAndnk15C4SQOUQ/Hacking%20exposed%20wireless%20%3A%20wireless%20security%20secrets%20%26%20--%20Johnny%20Cache%2C%20Vincent%20Liu%20--%201%20edition%2C%20March%2026%2C%202007%20--%20McGraw-Hill%20Osborne%20Media%3B%20--%209780071070911%20--%201b4d7b43a50b292e1b8c3df8497902c8%20--%20Anna%E2%80%99s%20Archive.chm
 
